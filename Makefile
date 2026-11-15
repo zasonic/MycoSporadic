@@ -7,7 +7,7 @@ install:            ## install runtime + dev deps
 dev:                ## API + simulated chamber, zero external services
 	MYCOLOOP_SIM_AUTOSTART=1 MYCOLOOP_BUS=loopback $(PY) -m uvicorn mycoloop.main:app --host 0.0.0.0 --port 8000 --reload
 
-test:               ## 62 tests: contracts, command bus, quality, biology, safety, optimizer gate
+test:               ## 75 tests: contracts, command bus, quality, biology, safety, optimizer gate
 	$(PY) -m pytest -q
 
 contracts:          ## export openapi + asyncapi + json schemas
