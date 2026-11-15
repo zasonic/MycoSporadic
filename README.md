@@ -68,6 +68,77 @@ Default keys (change them before anything touches hardware):
 
 ---
 
+## Hardware you will need (sensors, actuators, and the rest)
+
+The backend runs fully simulated today. When you move to a real chamber, this
+is the exact hardware contract the code expects — every item below is named in
+the schemas (`schemas.py`), the wire contract (`contracts/asyncapi.yaml`,
+`contracts/safety-envelope.yaml`) or the module that consumes it.
+
+### Sensors (required for a live cycle)
+
+| Sensor kind | Telemetry field | Unit / accepted range | Plausibility window & notes | Where it is used |
+|---|---|---|---|---|
+| **Temperature** | `temperature_c` | °C (schema allows −40…85) | −5…60 °C; max 8 °C jump between readings | Temp hysteresis control, over-temp interlock, drift checks |
+| **Relative humidity** | `humidity_pct` | %RH (0…100) | 0…100 %; saturation streak >99.5 % flagged; max 25 % jump | RH hysteresis control, over-humidity interlock, contamination risk proxy |
+| **CO₂** | `co2_ppm` | ppm (schema allows 0…60 000) | 350…5 000 ppm; max 1 500 ppm jump | CO₂ PI control + purge interlock (`max_co2_ppm: 3000`) |
+
+These three are the **core fields** (`quality.CORE_FIELDS`): missing/stale
+readings from any of them trigger the staleness gate → fail-safe.
+
+### Sensors (optional but supported by the contract)
+
+| Sensor kind | Telemetry field | Notes |
+|---|---|---|
+| **Substrate moisture** | `substrate_moisture_pct` | 0…100 %, registered via `SENSOR_UNITS`; not yet part of the control loop |
+| **Camera** | vision frames | The edge captures images and posts them; inference (YOLO/SAM) runs on the edge and reports `PhenotypeFeatures` (colonization %, pin count/density, cap area/volume, maturity, contamination probability/type, wetness/dryness/condensation scores). The backend stores and queries only. |
+
+Suggested starting points (any device that can publish the MQTT contract works):
+SHT31/SHT35 or HDC302x for temp/RH, an NDIR sensor (SCD40/MH-Z19/CM1106) for
+CO₂ — capacitive/resistive probes or TDR for substrate moisture, ESP32-camera
+or a USB/IP camera at the vision station. VPD is derived from temp + RH, so no
+dedicated sensor is needed.
+
+### Actuators (exactly four kinds are accepted)
+
+`Telemetry.actuators` validation rejects anything else: **heater, humidifier,
+fan, light**.
+
+| Actuator | Control strategy | Hardware guardrails in the envelope |
+|---|---|---|
+| Heater | on/off with hysteresis | `max_heater_runtime_min: 20`, hard cut at `max_temp_c: 30`; resistive heaters have **no cooldown** (short-cycle protection is per-actuator) |
+| Humidifier | on/off with hysteresis | `max_humidifier_runtime_min: 30`, cut at `max_humidity_pct: 99`, ultrasonic misters get the 30 s cooldown |
+| Fan (FAE/exchange) | PWM %, PI control on CO₂ | `min_fae_pct: 10`, CO₂ purge forces 100 %, short-cycle cooldown applies; a tachometer feedback line lets the device report `fan_failure` honestly |
+| Light | PWM % (photoperiod/intensity) | No minimum off-time; forced off in the device safe state |
+
+Each actuator needs a relay or MOSFET driver the edge can switch **and** report
+back — the backend trusts what the device *reports*, never its own last command
+(bug #3 in "Bugs this scaffold found in itself").
+
+### Edge controller & safety hardware
+
+* **Edge stack:** Mycodo, ESPHome/PlatformIO, or the bundled simulator
+  (`DeviceCreate.edge_stack`). It must speak MQTT 5 per `contracts/asyncapi.yaml`
+  (QoS 1), send telemetry with `(boot_id, seq)` dedupe keys, heartbeats, and
+  health reports including per-sensor `sensor_health` scores.
+* **Device-side watchdog (mandatory):** on backend silence > `watchdog_timeout_s`
+  (60 s) the device independently cuts the relay-board supply and fails safe:
+  heater/humidifier off, fan 100 %, light off. Enforce this in hardware, not
+  firmware — it is the only defence against a welded relay.
+* **Independent envelope copy:** the edge enforces its own
+  `safety-envelope.yaml` limits without asking the backend.
+* **Supporting infrastructure:** a broker (Mosquitto in `deploy/`), power
+  delivery with the relay board on a separately switched/cuttable rail, and
+  optionally a reference instrument (calibrated temp/RH/CO₂ meter) for Phase 3
+  calibration-against-a-reference work.
+
+Registering a device declares its inventory — `sensors: ["temperature",
+"humidity", "co2"]` and `actuators: ["heater", "humidifier", "fan", "light"]`
+by default. Uninstalled optional sensors must simply be omitted; reporting a
+dead one flags every reading as degraded (bug #8 above).
+
+---
+
 ## Architecture
 
 ```
