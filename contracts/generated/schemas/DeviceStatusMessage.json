@@ -1,0 +1,53 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "device_id": {
+      "title": "Device Id",
+      "type": "string"
+    },
+    "ts": {
+      "format": "date-time",
+      "title": "Ts",
+      "type": "string"
+    },
+    "state": {
+      "enum": [
+        "online",
+        "offline"
+      ],
+      "title": "State",
+      "type": "string"
+    },
+    "firmware": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Firmware"
+    },
+    "reason": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Reason"
+    }
+  },
+  "required": [
+    "device_id",
+    "ts",
+    "state"
+  ],
+  "title": "DeviceStatusMessage",
+  "type": "object"
+}

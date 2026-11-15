@@ -1,0 +1,99 @@
+{
+  "$defs": {
+    "Stage": {
+      "enum": [
+        "INOCULATED",
+        "COLONIZING",
+        "COLONIZATION_COMPLETE",
+        "PINNING_INITIATED",
+        "PINNING_ACTIVE",
+        "MATURATION",
+        "HARVEST_READY",
+        "HARVESTED",
+        "FLUSH_COMPLETE",
+        "CONTAMINATED",
+        "ABORTED"
+      ],
+      "title": "Stage",
+      "type": "string"
+    }
+  },
+  "properties": {
+    "recipe_version_id": {
+      "title": "Recipe Version Id",
+      "type": "string"
+    },
+    "recipe_id": {
+      "title": "Recipe Id",
+      "type": "string"
+    },
+    "version": {
+      "title": "Version",
+      "type": "integer"
+    },
+    "stage": {
+      "$ref": "#/$defs/Stage"
+    },
+    "setpoints": {
+      "additionalProperties": true,
+      "title": "Setpoints",
+      "type": "object"
+    },
+    "created_at": {
+      "format": "date-time",
+      "title": "Created At",
+      "type": "string"
+    },
+    "created_by": {
+      "title": "Created By",
+      "type": "string"
+    },
+    "approved_by": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Approved By"
+    },
+    "change_reason": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Change Reason"
+    },
+    "parent_version_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Parent Version Id"
+    }
+  },
+  "required": [
+    "recipe_version_id",
+    "recipe_id",
+    "version",
+    "stage",
+    "setpoints",
+    "created_at",
+    "created_by"
+  ],
+  "title": "RecipeVersionRead",
+  "type": "object"
+}

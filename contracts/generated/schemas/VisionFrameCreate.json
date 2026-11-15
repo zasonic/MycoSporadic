@@ -1,0 +1,158 @@
+{
+  "$defs": {
+    "PhenotypeFeatures": {
+      "additionalProperties": false,
+      "properties": {
+        "colonization_percent": {
+          "maximum": 100,
+          "minimum": 0,
+          "title": "Colonization Percent",
+          "type": "number"
+        },
+        "pin_count": {
+          "minimum": 0,
+          "title": "Pin Count",
+          "type": "integer"
+        },
+        "pin_density": {
+          "minimum": 0,
+          "title": "Pin Density",
+          "type": "number"
+        },
+        "cap_area_estimate": {
+          "minimum": 0,
+          "title": "Cap Area Estimate",
+          "type": "number"
+        },
+        "cap_volume_estimate": {
+          "minimum": 0,
+          "title": "Cap Volume Estimate",
+          "type": "number"
+        },
+        "maturity_score": {
+          "maximum": 1,
+          "minimum": 0,
+          "title": "Maturity Score",
+          "type": "number"
+        },
+        "aborted_pin_count": {
+          "minimum": 0,
+          "title": "Aborted Pin Count",
+          "type": "integer"
+        },
+        "growth_rate_24h": {
+          "title": "Growth Rate 24H",
+          "type": "number"
+        },
+        "contamination_probability": {
+          "maximum": 1,
+          "minimum": 0,
+          "title": "Contamination Probability",
+          "type": "number"
+        },
+        "contamination_type": {
+          "default": "none",
+          "title": "Contamination Type",
+          "type": "string"
+        },
+        "wetness_score": {
+          "maximum": 1,
+          "minimum": 0,
+          "title": "Wetness Score",
+          "type": "number"
+        },
+        "dryness_score": {
+          "maximum": 1,
+          "minimum": 0,
+          "title": "Dryness Score",
+          "type": "number"
+        },
+        "condensation_score": {
+          "maximum": 1,
+          "minimum": 0,
+          "title": "Condensation Score",
+          "type": "number"
+        }
+      },
+      "required": [
+        "colonization_percent",
+        "pin_count",
+        "pin_density",
+        "cap_area_estimate",
+        "cap_volume_estimate",
+        "maturity_score",
+        "aborted_pin_count",
+        "growth_rate_24h",
+        "contamination_probability",
+        "wetness_score",
+        "dryness_score",
+        "condensation_score"
+      ],
+      "title": "PhenotypeFeatures",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "frame_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Frame Id"
+    },
+    "cycle_id": {
+      "title": "Cycle Id",
+      "type": "string"
+    },
+    "device_id": {
+      "title": "Device Id",
+      "type": "string"
+    },
+    "ts": {
+      "anyOf": [
+        {
+          "format": "date-time",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Ts"
+    },
+    "storage_uri": {
+      "default": "file:///frames/placeholder.jpg",
+      "title": "Storage Uri",
+      "type": "string"
+    },
+    "model_version": {
+      "title": "Model Version",
+      "type": "string"
+    },
+    "features": {
+      "$ref": "#/$defs/PhenotypeFeatures"
+    },
+    "confidence": {
+      "maximum": 1,
+      "minimum": 0,
+      "title": "Confidence",
+      "type": "number"
+    }
+  },
+  "required": [
+    "cycle_id",
+    "device_id",
+    "model_version",
+    "features",
+    "confidence"
+  ],
+  "title": "VisionFrameCreate",
+  "type": "object"
+}

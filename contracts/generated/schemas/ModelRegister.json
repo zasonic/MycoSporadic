@@ -1,0 +1,55 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "model_version": {
+      "title": "Model Version",
+      "type": "string"
+    },
+    "family": {
+      "default": "yolo",
+      "enum": [
+        "yolo",
+        "rt-detr",
+        "sam2",
+        "depth-anything"
+      ],
+      "title": "Family",
+      "type": "string"
+    },
+    "dataset": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Dataset"
+    },
+    "metrics": {
+      "additionalProperties": {
+        "type": "number"
+      },
+      "default": {},
+      "title": "Metrics",
+      "type": "object"
+    },
+    "edge_runtime": {
+      "default": "onnxruntime",
+      "enum": [
+        "onnxruntime",
+        "tensorrt",
+        "pytorch"
+      ],
+      "title": "Edge Runtime",
+      "type": "string"
+    }
+  },
+  "required": [
+    "model_version"
+  ],
+  "title": "ModelRegister",
+  "type": "object"
+}

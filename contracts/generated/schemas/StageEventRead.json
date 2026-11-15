@@ -1,0 +1,68 @@
+{
+  "$defs": {
+    "Stage": {
+      "enum": [
+        "INOCULATED",
+        "COLONIZING",
+        "COLONIZATION_COMPLETE",
+        "PINNING_INITIATED",
+        "PINNING_ACTIVE",
+        "MATURATION",
+        "HARVEST_READY",
+        "HARVESTED",
+        "FLUSH_COMPLETE",
+        "CONTAMINATED",
+        "ABORTED"
+      ],
+      "title": "Stage",
+      "type": "string"
+    }
+  },
+  "properties": {
+    "event_id": {
+      "title": "Event Id",
+      "type": "string"
+    },
+    "cycle_id": {
+      "title": "Cycle Id",
+      "type": "string"
+    },
+    "from_stage": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Stage"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "to_stage": {
+      "$ref": "#/$defs/Stage"
+    },
+    "actor": {
+      "title": "Actor",
+      "type": "string"
+    },
+    "reason": {
+      "title": "Reason",
+      "type": "string"
+    },
+    "ts": {
+      "format": "date-time",
+      "title": "Ts",
+      "type": "string"
+    }
+  },
+  "required": [
+    "event_id",
+    "cycle_id",
+    "from_stage",
+    "to_stage",
+    "actor",
+    "reason",
+    "ts"
+  ],
+  "title": "StageEventRead",
+  "type": "object"
+}

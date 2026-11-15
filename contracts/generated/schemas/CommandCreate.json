@@ -1,0 +1,45 @@
+{
+  "$defs": {
+    "CommandKind": {
+      "enum": [
+        "setpoint",
+        "actuator",
+        "recipe",
+        "reboot"
+      ],
+      "title": "CommandKind",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "kind": {
+      "$ref": "#/$defs/CommandKind"
+    },
+    "payload": {
+      "additionalProperties": true,
+      "title": "Payload",
+      "type": "object"
+    },
+    "idempotency_key": {
+      "maxLength": 120,
+      "minLength": 8,
+      "title": "Idempotency Key",
+      "type": "string"
+    },
+    "ttl_s": {
+      "default": 60,
+      "maximum": 3600,
+      "minimum": 1,
+      "title": "Ttl S",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "kind",
+    "payload",
+    "idempotency_key"
+  ],
+  "title": "CommandCreate",
+  "type": "object"
+}

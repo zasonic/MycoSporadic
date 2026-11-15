@@ -1,0 +1,150 @@
+{
+  "$defs": {
+    "Stage": {
+      "enum": [
+        "INOCULATED",
+        "COLONIZING",
+        "COLONIZATION_COMPLETE",
+        "PINNING_INITIATED",
+        "PINNING_ACTIVE",
+        "MATURATION",
+        "HARVEST_READY",
+        "HARVESTED",
+        "FLUSH_COMPLETE",
+        "CONTAMINATED",
+        "ABORTED"
+      ],
+      "title": "Stage",
+      "type": "string"
+    }
+  },
+  "properties": {
+    "id": {
+      "title": "Id",
+      "type": "integer"
+    },
+    "device_id": {
+      "title": "Device Id",
+      "type": "string"
+    },
+    "ts": {
+      "format": "date-time",
+      "title": "Ts",
+      "type": "string"
+    },
+    "temperature_c": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Temperature C"
+    },
+    "humidity_pct": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Humidity Pct"
+    },
+    "co2_ppm": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Co2 Ppm"
+    },
+    "fan_pct": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Fan Pct"
+    },
+    "light_pct": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Light Pct"
+    },
+    "actuators": {
+      "additionalProperties": true,
+      "title": "Actuators",
+      "type": "object"
+    },
+    "quality_flags": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Quality Flags",
+      "type": "array"
+    },
+    "quality_score": {
+      "title": "Quality Score",
+      "type": "number"
+    },
+    "validated": {
+      "title": "Validated",
+      "type": "boolean"
+    },
+    "cycle_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Cycle Id"
+    },
+    "stage": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Stage"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "required": [
+    "id",
+    "device_id",
+    "ts",
+    "temperature_c",
+    "humidity_pct",
+    "co2_ppm",
+    "fan_pct",
+    "light_pct",
+    "actuators",
+    "quality_flags",
+    "quality_score",
+    "validated",
+    "cycle_id",
+    "stage"
+  ],
+  "title": "TelemetryCleanRead",
+  "type": "object"
+}

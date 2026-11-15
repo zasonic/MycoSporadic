@@ -1,0 +1,43 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "strain_id": {
+      "title": "Strain Id",
+      "type": "string"
+    },
+    "name": {
+      "title": "Name",
+      "type": "string"
+    },
+    "species": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Species"
+    },
+    "notes": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Notes"
+    }
+  },
+  "required": [
+    "strain_id",
+    "name"
+  ],
+  "title": "StrainCreate",
+  "type": "object"
+}

@@ -1,0 +1,47 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "grams": {
+      "exclusiveMinimum": 0,
+      "maximum": 100000,
+      "title": "Grams",
+      "type": "number"
+    },
+    "flush": {
+      "default": 1,
+      "maximum": 20,
+      "minimum": 1,
+      "title": "Flush",
+      "type": "integer"
+    },
+    "quality": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Quality"
+    },
+    "notes": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Notes"
+    }
+  },
+  "required": [
+    "grams"
+  ],
+  "title": "HarvestCreate",
+  "type": "object"
+}

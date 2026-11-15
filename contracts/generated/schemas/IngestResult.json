@@ -1,0 +1,37 @@
+{
+  "properties": {
+    "accepted": {
+      "title": "Accepted",
+      "type": "integer"
+    },
+    "duplicates": {
+      "title": "Duplicates",
+      "type": "integer"
+    },
+    "quarantined": {
+      "title": "Quarantined",
+      "type": "integer"
+    },
+    "flagged": {
+      "title": "Flagged",
+      "type": "integer"
+    },
+    "details": {
+      "default": [],
+      "items": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "title": "Details",
+      "type": "array"
+    }
+  },
+  "required": [
+    "accepted",
+    "duplicates",
+    "quarantined",
+    "flagged"
+  ],
+  "title": "IngestResult",
+  "type": "object"
+}

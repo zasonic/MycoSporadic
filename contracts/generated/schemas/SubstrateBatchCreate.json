@@ -1,0 +1,42 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "batch_id": {
+      "title": "Batch Id",
+      "type": "string"
+    },
+    "substrate_type": {
+      "default": "masters mix",
+      "title": "Substrate Type",
+      "type": "string"
+    },
+    "sterilization": {
+      "default": "autoclave 121C 90min",
+      "title": "Sterilization",
+      "type": "string"
+    },
+    "mass_kg": {
+      "default": 2.5,
+      "exclusiveMinimum": 0,
+      "title": "Mass Kg",
+      "type": "number"
+    },
+    "notes": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Notes"
+    }
+  },
+  "required": [
+    "batch_id"
+  ],
+  "title": "SubstrateBatchCreate",
+  "type": "object"
+}

@@ -1,0 +1,305 @@
+{
+  "$defs": {
+    "GrowCycleRead": {
+      "properties": {
+        "cycle_id": {
+          "title": "Cycle Id",
+          "type": "string"
+        },
+        "strain_id": {
+          "title": "Strain Id",
+          "type": "string"
+        },
+        "substrate_batch_id": {
+          "title": "Substrate Batch Id",
+          "type": "string"
+        },
+        "device_id": {
+          "title": "Device Id",
+          "type": "string"
+        },
+        "recipe_version_id": {
+          "title": "Recipe Version Id",
+          "type": "string"
+        },
+        "stage": {
+          "$ref": "#/$defs/Stage"
+        },
+        "flush": {
+          "title": "Flush",
+          "type": "integer"
+        },
+        "yield_g": {
+          "title": "Yield G",
+          "type": "number"
+        },
+        "contaminated": {
+          "title": "Contaminated",
+          "type": "boolean"
+        },
+        "started_at": {
+          "format": "date-time",
+          "title": "Started At",
+          "type": "string"
+        },
+        "ended_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Ended At"
+        },
+        "notes": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Notes"
+        }
+      },
+      "required": [
+        "cycle_id",
+        "strain_id",
+        "substrate_batch_id",
+        "device_id",
+        "recipe_version_id",
+        "stage",
+        "flush",
+        "yield_g",
+        "contaminated",
+        "started_at"
+      ],
+      "title": "GrowCycleRead",
+      "type": "object"
+    },
+    "HarvestRead": {
+      "properties": {
+        "harvest_id": {
+          "title": "Harvest Id",
+          "type": "string"
+        },
+        "cycle_id": {
+          "title": "Cycle Id",
+          "type": "string"
+        },
+        "grams": {
+          "title": "Grams",
+          "type": "number"
+        },
+        "flush": {
+          "title": "Flush",
+          "type": "integer"
+        },
+        "quality": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Quality"
+        },
+        "notes": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Notes"
+        },
+        "actor": {
+          "title": "Actor",
+          "type": "string"
+        },
+        "ts": {
+          "format": "date-time",
+          "title": "Ts",
+          "type": "string"
+        }
+      },
+      "required": [
+        "harvest_id",
+        "cycle_id",
+        "grams",
+        "flush",
+        "quality",
+        "notes",
+        "actor",
+        "ts"
+      ],
+      "title": "HarvestRead",
+      "type": "object"
+    },
+    "Stage": {
+      "enum": [
+        "INOCULATED",
+        "COLONIZING",
+        "COLONIZATION_COMPLETE",
+        "PINNING_INITIATED",
+        "PINNING_ACTIVE",
+        "MATURATION",
+        "HARVEST_READY",
+        "HARVESTED",
+        "FLUSH_COMPLETE",
+        "CONTAMINATED",
+        "ABORTED"
+      ],
+      "title": "Stage",
+      "type": "string"
+    },
+    "StageEnvironment": {
+      "properties": {
+        "stage": {
+          "$ref": "#/$defs/Stage"
+        },
+        "samples": {
+          "title": "Samples",
+          "type": "integer"
+        },
+        "avg_temp_c": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Avg Temp C"
+        },
+        "avg_humidity_pct": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Avg Humidity Pct"
+        },
+        "avg_co2_ppm": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Avg Co2 Ppm"
+        },
+        "min_co2_ppm": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Min Co2 Ppm"
+        },
+        "max_co2_ppm": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Max Co2 Ppm"
+        },
+        "from_ts": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "From Ts"
+        },
+        "to_ts": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "To Ts"
+        }
+      },
+      "required": [
+        "stage",
+        "samples",
+        "avg_temp_c",
+        "avg_humidity_pct",
+        "avg_co2_ppm",
+        "min_co2_ppm",
+        "max_co2_ppm",
+        "from_ts",
+        "to_ts"
+      ],
+      "title": "StageEnvironment",
+      "type": "object"
+    }
+  },
+  "properties": {
+    "cycle": {
+      "$ref": "#/$defs/GrowCycleRead"
+    },
+    "events": {
+      "items": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "title": "Events",
+      "type": "array"
+    },
+    "environment_by_stage": {
+      "items": {
+        "$ref": "#/$defs/StageEnvironment"
+      },
+      "title": "Environment By Stage",
+      "type": "array"
+    },
+    "harvests": {
+      "items": {
+        "$ref": "#/$defs/HarvestRead"
+      },
+      "title": "Harvests",
+      "type": "array"
+    }
+  },
+  "required": [
+    "cycle",
+    "events",
+    "environment_by_stage",
+    "harvests"
+  ],
+  "title": "CycleTimeline",
+  "type": "object"
+}

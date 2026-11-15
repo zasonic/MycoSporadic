@@ -1,0 +1,57 @@
+{
+  "$defs": {
+    "AckState": {
+      "enum": [
+        "received",
+        "applied",
+        "failed"
+      ],
+      "title": "AckState",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "command_id": {
+      "title": "Command Id",
+      "type": "string"
+    },
+    "device_id": {
+      "title": "Device Id",
+      "type": "string"
+    },
+    "state": {
+      "$ref": "#/$defs/AckState"
+    },
+    "ts": {
+      "format": "date-time",
+      "title": "Ts",
+      "type": "string"
+    },
+    "detail": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Detail"
+    },
+    "duplicate": {
+      "default": false,
+      "title": "Duplicate",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "command_id",
+    "device_id",
+    "state",
+    "ts"
+  ],
+  "title": "CommandAck",
+  "type": "object"
+}

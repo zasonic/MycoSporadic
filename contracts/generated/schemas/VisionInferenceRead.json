@@ -1,0 +1,73 @@
+{
+  "$defs": {
+    "Stage": {
+      "enum": [
+        "INOCULATED",
+        "COLONIZING",
+        "COLONIZATION_COMPLETE",
+        "PINNING_INITIATED",
+        "PINNING_ACTIVE",
+        "MATURATION",
+        "HARVEST_READY",
+        "HARVESTED",
+        "FLUSH_COMPLETE",
+        "CONTAMINATED",
+        "ABORTED"
+      ],
+      "title": "Stage",
+      "type": "string"
+    }
+  },
+  "properties": {
+    "inference_id": {
+      "title": "Inference Id",
+      "type": "string"
+    },
+    "frame_id": {
+      "title": "Frame Id",
+      "type": "string"
+    },
+    "cycle_id": {
+      "title": "Cycle Id",
+      "type": "string"
+    },
+    "stage": {
+      "$ref": "#/$defs/Stage"
+    },
+    "ts": {
+      "format": "date-time",
+      "title": "Ts",
+      "type": "string"
+    },
+    "model_version": {
+      "title": "Model Version",
+      "type": "string"
+    },
+    "features": {
+      "additionalProperties": true,
+      "title": "Features",
+      "type": "object"
+    },
+    "confidence": {
+      "title": "Confidence",
+      "type": "number"
+    },
+    "human_corrected": {
+      "title": "Human Corrected",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "inference_id",
+    "frame_id",
+    "cycle_id",
+    "stage",
+    "ts",
+    "model_version",
+    "features",
+    "confidence",
+    "human_corrected"
+  ],
+  "title": "VisionInferenceRead",
+  "type": "object"
+}

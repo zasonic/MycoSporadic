@@ -1,0 +1,196 @@
+{
+  "$defs": {
+    "CommandKind": {
+      "enum": [
+        "setpoint",
+        "actuator",
+        "recipe",
+        "reboot"
+      ],
+      "title": "CommandKind",
+      "type": "string"
+    },
+    "CommandRead": {
+      "properties": {
+        "command_id": {
+          "title": "Command Id",
+          "type": "string"
+        },
+        "device_id": {
+          "title": "Device Id",
+          "type": "string"
+        },
+        "kind": {
+          "$ref": "#/$defs/CommandKind"
+        },
+        "payload": {
+          "additionalProperties": true,
+          "title": "Payload",
+          "type": "object"
+        },
+        "idempotency_key": {
+          "title": "Idempotency Key",
+          "type": "string"
+        },
+        "state": {
+          "$ref": "#/$defs/CommandState"
+        },
+        "attempts": {
+          "title": "Attempts",
+          "type": "integer"
+        },
+        "issued_at": {
+          "format": "date-time",
+          "title": "Issued At",
+          "type": "string"
+        },
+        "expires_at": {
+          "format": "date-time",
+          "title": "Expires At",
+          "type": "string"
+        },
+        "sent_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Sent At"
+        },
+        "closed_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Closed At"
+        },
+        "last_error": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Last Error"
+        },
+        "issued_by": {
+          "title": "Issued By",
+          "type": "string"
+        },
+        "idempotent_replay": {
+          "default": false,
+          "title": "Idempotent Replay",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "command_id",
+        "device_id",
+        "kind",
+        "payload",
+        "idempotency_key",
+        "state",
+        "attempts",
+        "issued_at",
+        "expires_at",
+        "issued_by"
+      ],
+      "title": "CommandRead",
+      "type": "object"
+    },
+    "CommandState": {
+      "enum": [
+        "queued",
+        "sent",
+        "received",
+        "applied",
+        "failed",
+        "expired",
+        "rejected_safety"
+      ],
+      "title": "CommandState",
+      "type": "string"
+    },
+    "SafetyVerdict": {
+      "properties": {
+        "ok": {
+          "title": "Ok",
+          "type": "boolean"
+        },
+        "violations": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/Violation"
+          },
+          "title": "Violations",
+          "type": "array"
+        }
+      },
+      "required": [
+        "ok"
+      ],
+      "title": "SafetyVerdict",
+      "type": "object"
+    },
+    "Violation": {
+      "properties": {
+        "field": {
+          "title": "Field",
+          "type": "string"
+        },
+        "value": {
+          "title": "Value"
+        },
+        "rule": {
+          "title": "Rule",
+          "type": "string"
+        },
+        "message": {
+          "title": "Message",
+          "type": "string"
+        }
+      },
+      "required": [
+        "field",
+        "value",
+        "rule",
+        "message"
+      ],
+      "title": "Violation",
+      "type": "object"
+    }
+  },
+  "properties": {
+    "command": {
+      "$ref": "#/$defs/CommandRead"
+    },
+    "safety": {
+      "$ref": "#/$defs/SafetyVerdict"
+    },
+    "idempotent_replay": {
+      "default": false,
+      "title": "Idempotent Replay",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "command",
+    "safety"
+  ],
+  "title": "DispatchResult",
+  "type": "object"
+}

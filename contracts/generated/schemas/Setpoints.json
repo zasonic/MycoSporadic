@@ -1,0 +1,44 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "temp_c": {
+      "maximum": 45,
+      "minimum": -5,
+      "title": "Temp C",
+      "type": "number"
+    },
+    "humidity_pct": {
+      "maximum": 100,
+      "minimum": 0,
+      "title": "Humidity Pct",
+      "type": "number"
+    },
+    "co2_ceiling_ppm": {
+      "maximum": 10000,
+      "minimum": 350,
+      "title": "Co2 Ceiling Ppm",
+      "type": "integer"
+    },
+    "fan_pct": {
+      "maximum": 100,
+      "minimum": 0,
+      "title": "Fan Pct",
+      "type": "integer"
+    },
+    "light_pct": {
+      "maximum": 100,
+      "minimum": 0,
+      "title": "Light Pct",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "temp_c",
+    "humidity_pct",
+    "co2_ceiling_ppm",
+    "fan_pct",
+    "light_pct"
+  ],
+  "title": "Setpoints",
+  "type": "object"
+}

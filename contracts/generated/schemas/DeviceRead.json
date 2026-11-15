@@ -1,0 +1,68 @@
+{
+  "$defs": {
+    "DeviceStatus": {
+      "enum": [
+        "online",
+        "offline",
+        "fail_safe",
+        "unknown"
+      ],
+      "title": "DeviceStatus",
+      "type": "string"
+    }
+  },
+  "properties": {
+    "device_id": {
+      "title": "Device Id",
+      "type": "string"
+    },
+    "name": {
+      "title": "Name",
+      "type": "string"
+    },
+    "edge_stack": {
+      "title": "Edge Stack",
+      "type": "string"
+    },
+    "firmware": {
+      "title": "Firmware",
+      "type": "string"
+    },
+    "status": {
+      "$ref": "#/$defs/DeviceStatus"
+    },
+    "registered_at": {
+      "format": "date-time",
+      "title": "Registered At",
+      "type": "string"
+    },
+    "last_seen_at": {
+      "anyOf": [
+        {
+          "format": "date-time",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Last Seen At"
+    },
+    "watchdog_state": {
+      "default": "armed",
+      "title": "Watchdog State",
+      "type": "string"
+    }
+  },
+  "required": [
+    "device_id",
+    "name",
+    "edge_stack",
+    "firmware",
+    "status",
+    "registered_at"
+  ],
+  "title": "DeviceRead",
+  "type": "object"
+}

@@ -1,0 +1,47 @@
+{
+  "properties": {
+    "audit_id": {
+      "title": "Audit Id",
+      "type": "string"
+    },
+    "ts": {
+      "format": "date-time",
+      "title": "Ts",
+      "type": "string"
+    },
+    "actor": {
+      "title": "Actor",
+      "type": "string"
+    },
+    "action": {
+      "title": "Action",
+      "type": "string"
+    },
+    "subject": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Subject"
+    },
+    "detail": {
+      "additionalProperties": true,
+      "title": "Detail",
+      "type": "object"
+    }
+  },
+  "required": [
+    "audit_id",
+    "ts",
+    "actor",
+    "action",
+    "subject",
+    "detail"
+  ],
+  "title": "AuditRead",
+  "type": "object"
+}

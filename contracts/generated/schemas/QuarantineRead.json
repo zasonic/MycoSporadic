@@ -1,0 +1,43 @@
+{
+  "properties": {
+    "id": {
+      "title": "Id",
+      "type": "integer"
+    },
+    "device_id": {
+      "title": "Device Id",
+      "type": "string"
+    },
+    "seq": {
+      "title": "Seq",
+      "type": "integer"
+    },
+    "ts": {
+      "format": "date-time",
+      "title": "Ts",
+      "type": "string"
+    },
+    "reasons": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Reasons",
+      "type": "array"
+    },
+    "payload": {
+      "additionalProperties": true,
+      "title": "Payload",
+      "type": "object"
+    }
+  },
+  "required": [
+    "id",
+    "device_id",
+    "seq",
+    "ts",
+    "reasons",
+    "payload"
+  ],
+  "title": "QuarantineRead",
+  "type": "object"
+}

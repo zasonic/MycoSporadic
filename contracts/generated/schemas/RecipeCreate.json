@@ -1,0 +1,114 @@
+{
+  "$defs": {
+    "Setpoints": {
+      "additionalProperties": false,
+      "properties": {
+        "temp_c": {
+          "maximum": 45,
+          "minimum": -5,
+          "title": "Temp C",
+          "type": "number"
+        },
+        "humidity_pct": {
+          "maximum": 100,
+          "minimum": 0,
+          "title": "Humidity Pct",
+          "type": "number"
+        },
+        "co2_ceiling_ppm": {
+          "maximum": 10000,
+          "minimum": 350,
+          "title": "Co2 Ceiling Ppm",
+          "type": "integer"
+        },
+        "fan_pct": {
+          "maximum": 100,
+          "minimum": 0,
+          "title": "Fan Pct",
+          "type": "integer"
+        },
+        "light_pct": {
+          "maximum": 100,
+          "minimum": 0,
+          "title": "Light Pct",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "temp_c",
+        "humidity_pct",
+        "co2_ceiling_ppm",
+        "fan_pct",
+        "light_pct"
+      ],
+      "title": "Setpoints",
+      "type": "object"
+    },
+    "Stage": {
+      "enum": [
+        "INOCULATED",
+        "COLONIZING",
+        "COLONIZATION_COMPLETE",
+        "PINNING_INITIATED",
+        "PINNING_ACTIVE",
+        "MATURATION",
+        "HARVEST_READY",
+        "HARVESTED",
+        "FLUSH_COMPLETE",
+        "CONTAMINATED",
+        "ABORTED"
+      ],
+      "title": "Stage",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "recipe_id": {
+      "title": "Recipe Id",
+      "type": "string"
+    },
+    "name": {
+      "title": "Name",
+      "type": "string"
+    },
+    "description": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Description"
+    },
+    "stage": {
+      "$ref": "#/$defs/Stage",
+      "default": "PINNING_ACTIVE"
+    },
+    "setpoints": {
+      "$ref": "#/$defs/Setpoints"
+    },
+    "change_reason": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Change Reason"
+    }
+  },
+  "required": [
+    "recipe_id",
+    "name",
+    "setpoints"
+  ],
+  "title": "RecipeCreate",
+  "type": "object"
+}

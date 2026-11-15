@@ -1,0 +1,42 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "temp_min": {
+      "default": 16.0,
+      "title": "Temp Min",
+      "type": "number"
+    },
+    "temp_max": {
+      "default": 22.0,
+      "title": "Temp Max",
+      "type": "number"
+    },
+    "rh_min": {
+      "default": 86.0,
+      "title": "Rh Min",
+      "type": "number"
+    },
+    "rh_max": {
+      "default": 96.0,
+      "title": "Rh Max",
+      "type": "number"
+    },
+    "co2_max": {
+      "default": 1400,
+      "title": "Co2 Max",
+      "type": "integer"
+    },
+    "fae_min": {
+      "default": 35,
+      "title": "Fae Min",
+      "type": "integer"
+    },
+    "fae_max": {
+      "default": 90,
+      "title": "Fae Max",
+      "type": "integer"
+    }
+  },
+  "title": "SearchSpace",
+  "type": "object"
+}

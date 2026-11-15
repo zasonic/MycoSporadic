@@ -1,0 +1,80 @@
+{
+  "additionalProperties": false,
+  "description": "Biological + hardware safety envelope (contracts/safety-envelope.yaml).",
+  "properties": {
+    "min_temp_c": {
+      "default": 10.0,
+      "title": "Min Temp C",
+      "type": "number"
+    },
+    "max_temp_c": {
+      "default": 30.0,
+      "title": "Max Temp C",
+      "type": "number"
+    },
+    "min_humidity_pct": {
+      "default": 50.0,
+      "title": "Min Humidity Pct",
+      "type": "number"
+    },
+    "max_humidity_pct": {
+      "default": 99.0,
+      "title": "Max Humidity Pct",
+      "type": "number"
+    },
+    "max_co2_ppm": {
+      "default": 3000,
+      "title": "Max Co2 Ppm",
+      "type": "integer"
+    },
+    "min_fae_pct": {
+      "default": 10,
+      "title": "Min Fae Pct",
+      "type": "integer"
+    },
+    "max_heater_runtime_min": {
+      "default": 20,
+      "title": "Max Heater Runtime Min",
+      "type": "integer"
+    },
+    "max_humidifier_runtime_min": {
+      "default": 30,
+      "title": "Max Humidifier Runtime Min",
+      "type": "integer"
+    },
+    "actuator_cooldown_s": {
+      "default": 30,
+      "title": "Actuator Cooldown S",
+      "type": "integer"
+    },
+    "cooldown_actuators": {
+      "default": [
+        "humidifier",
+        "fan"
+      ],
+      "items": {
+        "type": "string"
+      },
+      "title": "Cooldown Actuators",
+      "type": "array"
+    },
+    "watchdog_timeout_s": {
+      "default": 60,
+      "title": "Watchdog Timeout S",
+      "type": "integer"
+    },
+    "sensor_invalid_behavior": {
+      "const": "fail_safe",
+      "default": "fail_safe",
+      "title": "Sensor Invalid Behavior",
+      "type": "string"
+    },
+    "max_contamination_probability": {
+      "default": 0.35,
+      "title": "Max Contamination Probability",
+      "type": "number"
+    }
+  },
+  "title": "SafetyEnvelope",
+  "type": "object"
+}

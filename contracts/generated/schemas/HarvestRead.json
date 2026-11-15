@@ -1,0 +1,63 @@
+{
+  "properties": {
+    "harvest_id": {
+      "title": "Harvest Id",
+      "type": "string"
+    },
+    "cycle_id": {
+      "title": "Cycle Id",
+      "type": "string"
+    },
+    "grams": {
+      "title": "Grams",
+      "type": "number"
+    },
+    "flush": {
+      "title": "Flush",
+      "type": "integer"
+    },
+    "quality": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Quality"
+    },
+    "notes": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Notes"
+    },
+    "actor": {
+      "title": "Actor",
+      "type": "string"
+    },
+    "ts": {
+      "format": "date-time",
+      "title": "Ts",
+      "type": "string"
+    }
+  },
+  "required": [
+    "harvest_id",
+    "cycle_id",
+    "grams",
+    "flush",
+    "quality",
+    "notes",
+    "actor",
+    "ts"
+  ],
+  "title": "HarvestRead",
+  "type": "object"
+}

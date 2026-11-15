@@ -1,0 +1,124 @@
+{
+  "properties": {
+    "recommendation_id": {
+      "title": "Recommendation Id",
+      "type": "string"
+    },
+    "recipe_id": {
+      "title": "Recipe Id",
+      "type": "string"
+    },
+    "device_id": {
+      "title": "Device Id",
+      "type": "string"
+    },
+    "params": {
+      "additionalProperties": true,
+      "title": "Params",
+      "type": "object"
+    },
+    "delta": {
+      "additionalProperties": true,
+      "title": "Delta",
+      "type": "object"
+    },
+    "expected_effect": {
+      "additionalProperties": true,
+      "title": "Expected Effect",
+      "type": "object"
+    },
+    "confidence": {
+      "enum": [
+        "low",
+        "medium",
+        "high"
+      ],
+      "title": "Confidence",
+      "type": "string"
+    },
+    "reason": {
+      "title": "Reason",
+      "type": "string"
+    },
+    "based_on_cycles": {
+      "title": "Based On Cycles",
+      "type": "integer"
+    },
+    "violations": {
+      "items": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "title": "Violations",
+      "type": "array"
+    },
+    "state": {
+      "enum": [
+        "pending",
+        "approved",
+        "rejected",
+        "rolled_back"
+      ],
+      "title": "State",
+      "type": "string"
+    },
+    "created_at": {
+      "format": "date-time",
+      "title": "Created At",
+      "type": "string"
+    },
+    "decided_at": {
+      "anyOf": [
+        {
+          "format": "date-time",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Decided At"
+    },
+    "decided_by": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Decided By"
+    },
+    "applied_recipe_version_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Applied Recipe Version Id"
+    }
+  },
+  "required": [
+    "recommendation_id",
+    "recipe_id",
+    "device_id",
+    "params",
+    "delta",
+    "expected_effect",
+    "confidence",
+    "reason",
+    "based_on_cycles",
+    "violations",
+    "state",
+    "created_at",
+    "decided_at",
+    "decided_by"
+  ],
+  "title": "RecommendationRead",
+  "type": "object"
+}

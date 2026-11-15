@@ -1,0 +1,74 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "device_id": {
+      "title": "Device Id",
+      "type": "string"
+    },
+    "ts": {
+      "format": "date-time",
+      "title": "Ts",
+      "type": "string"
+    },
+    "uptime_s": {
+      "minimum": 0,
+      "title": "Uptime S",
+      "type": "integer"
+    },
+    "firmware": {
+      "title": "Firmware",
+      "type": "string"
+    },
+    "sensor_health": {
+      "additionalProperties": {
+        "type": "number"
+      },
+      "default": {},
+      "title": "Sensor Health",
+      "type": "object"
+    },
+    "watchdog_state": {
+      "default": "armed",
+      "enum": [
+        "armed",
+        "fail_safe"
+      ],
+      "title": "Watchdog State",
+      "type": "string"
+    },
+    "watchdog_remaining_s": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Watchdog Remaining S"
+    },
+    "safe_state": {
+      "additionalProperties": true,
+      "default": {},
+      "title": "Safe State",
+      "type": "object"
+    },
+    "faults": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Faults",
+      "type": "array"
+    }
+  },
+  "required": [
+    "device_id",
+    "ts",
+    "uptime_s",
+    "firmware"
+  ],
+  "title": "DeviceHealth",
+  "type": "object"
+}

@@ -1,0 +1,62 @@
+{
+  "properties": {
+    "device_id": {
+      "title": "Device Id",
+      "type": "string"
+    },
+    "sensor": {
+      "title": "Sensor",
+      "type": "string"
+    },
+    "health_score": {
+      "title": "Health Score",
+      "type": "number"
+    },
+    "samples": {
+      "title": "Samples",
+      "type": "integer"
+    },
+    "invalid_ratio": {
+      "title": "Invalid Ratio",
+      "type": "number"
+    },
+    "drift_suspected": {
+      "title": "Drift Suspected",
+      "type": "boolean"
+    },
+    "mean": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Mean"
+    },
+    "stddev": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Stddev"
+    }
+  },
+  "required": [
+    "device_id",
+    "sensor",
+    "health_score",
+    "samples",
+    "invalid_ratio",
+    "drift_suspected",
+    "mean",
+    "stddev"
+  ],
+  "title": "DriftReport",
+  "type": "object"
+}

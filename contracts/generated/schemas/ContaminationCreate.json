@@ -1,0 +1,46 @@
+{
+  "$defs": {
+    "Severity": {
+      "enum": [
+        "localized",
+        "spreading",
+        "systemic"
+      ],
+      "title": "Severity",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "kind": {
+      "default": "unknown",
+      "enum": [
+        "trichoderma",
+        "bacterial blotch",
+        "cobweb",
+        "black mold",
+        "unknown"
+      ],
+      "title": "Kind",
+      "type": "string"
+    },
+    "severity": {
+      "$ref": "#/$defs/Severity",
+      "default": "localized"
+    },
+    "notes": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Notes"
+    }
+  },
+  "title": "ContaminationCreate",
+  "type": "object"
+}

@@ -1,0 +1,53 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "cycle_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Cycle Id"
+    },
+    "strain_id": {
+      "title": "Strain Id",
+      "type": "string"
+    },
+    "substrate_batch_id": {
+      "title": "Substrate Batch Id",
+      "type": "string"
+    },
+    "device_id": {
+      "title": "Device Id",
+      "type": "string"
+    },
+    "recipe_version_id": {
+      "title": "Recipe Version Id",
+      "type": "string"
+    },
+    "notes": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Notes"
+    }
+  },
+  "required": [
+    "strain_id",
+    "substrate_batch_id",
+    "device_id",
+    "recipe_version_id"
+  ],
+  "title": "GrowCycleCreate",
+  "type": "object"
+}

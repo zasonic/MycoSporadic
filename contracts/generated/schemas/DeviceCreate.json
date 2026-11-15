@@ -1,0 +1,62 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "device_id": {
+      "maxLength": 64,
+      "minLength": 3,
+      "pattern": "^[a-z0-9][a-z0-9\\-]*$",
+      "title": "Device Id",
+      "type": "string"
+    },
+    "name": {
+      "title": "Name",
+      "type": "string"
+    },
+    "edge_stack": {
+      "default": "simulated",
+      "enum": [
+        "mycodo",
+        "esphome",
+        "simulated"
+      ],
+      "title": "Edge Stack",
+      "type": "string"
+    },
+    "firmware": {
+      "default": "0.0.0",
+      "title": "Firmware",
+      "type": "string"
+    },
+    "sensors": {
+      "default": [
+        "temperature",
+        "humidity",
+        "co2"
+      ],
+      "items": {
+        "type": "string"
+      },
+      "title": "Sensors",
+      "type": "array"
+    },
+    "actuators": {
+      "default": [
+        "heater",
+        "humidifier",
+        "fan",
+        "light"
+      ],
+      "items": {
+        "type": "string"
+      },
+      "title": "Actuators",
+      "type": "array"
+    }
+  },
+  "required": [
+    "device_id",
+    "name"
+  ],
+  "title": "DeviceCreate",
+  "type": "object"
+}

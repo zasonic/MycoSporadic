@@ -1,0 +1,102 @@
+{
+  "$defs": {
+    "Stage": {
+      "enum": [
+        "INOCULATED",
+        "COLONIZING",
+        "COLONIZATION_COMPLETE",
+        "PINNING_INITIATED",
+        "PINNING_ACTIVE",
+        "MATURATION",
+        "HARVEST_READY",
+        "HARVESTED",
+        "FLUSH_COMPLETE",
+        "CONTAMINATED",
+        "ABORTED"
+      ],
+      "title": "Stage",
+      "type": "string"
+    }
+  },
+  "properties": {
+    "cycle_id": {
+      "title": "Cycle Id",
+      "type": "string"
+    },
+    "strain_id": {
+      "title": "Strain Id",
+      "type": "string"
+    },
+    "substrate_batch_id": {
+      "title": "Substrate Batch Id",
+      "type": "string"
+    },
+    "device_id": {
+      "title": "Device Id",
+      "type": "string"
+    },
+    "recipe_version_id": {
+      "title": "Recipe Version Id",
+      "type": "string"
+    },
+    "stage": {
+      "$ref": "#/$defs/Stage"
+    },
+    "flush": {
+      "title": "Flush",
+      "type": "integer"
+    },
+    "yield_g": {
+      "title": "Yield G",
+      "type": "number"
+    },
+    "contaminated": {
+      "title": "Contaminated",
+      "type": "boolean"
+    },
+    "started_at": {
+      "format": "date-time",
+      "title": "Started At",
+      "type": "string"
+    },
+    "ended_at": {
+      "anyOf": [
+        {
+          "format": "date-time",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Ended At"
+    },
+    "notes": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Notes"
+    }
+  },
+  "required": [
+    "cycle_id",
+    "strain_id",
+    "substrate_batch_id",
+    "device_id",
+    "recipe_version_id",
+    "stage",
+    "flush",
+    "yield_g",
+    "contaminated",
+    "started_at"
+  ],
+  "title": "GrowCycleRead",
+  "type": "object"
+}

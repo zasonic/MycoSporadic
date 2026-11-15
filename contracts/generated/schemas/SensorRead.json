@@ -1,0 +1,56 @@
+{
+  "properties": {
+    "sensor_id": {
+      "title": "Sensor Id",
+      "type": "string"
+    },
+    "device_id": {
+      "title": "Device Id",
+      "type": "string"
+    },
+    "kind": {
+      "title": "Kind",
+      "type": "string"
+    },
+    "unit": {
+      "title": "Unit",
+      "type": "string"
+    },
+    "calibration_offset": {
+      "title": "Calibration Offset",
+      "type": "number"
+    },
+    "calibration_scale": {
+      "title": "Calibration Scale",
+      "type": "number"
+    },
+    "health_score": {
+      "title": "Health Score",
+      "type": "number"
+    },
+    "last_seen_at": {
+      "anyOf": [
+        {
+          "format": "date-time",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Last Seen At"
+    }
+  },
+  "required": [
+    "sensor_id",
+    "device_id",
+    "kind",
+    "unit",
+    "calibration_offset",
+    "calibration_scale",
+    "health_score"
+  ],
+  "title": "SensorRead",
+  "type": "object"
+}

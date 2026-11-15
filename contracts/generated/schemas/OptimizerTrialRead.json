@@ -1,0 +1,71 @@
+{
+  "properties": {
+    "trial_id": {
+      "title": "Trial Id",
+      "type": "string"
+    },
+    "cycle_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Cycle Id"
+    },
+    "params": {
+      "additionalProperties": true,
+      "title": "Params",
+      "type": "object"
+    },
+    "objective": {
+      "title": "Objective",
+      "type": "number"
+    },
+    "constraints_ok": {
+      "title": "Constraints Ok",
+      "type": "boolean"
+    },
+    "recommendation_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Recommendation Id"
+    },
+    "approved_by": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Approved By"
+    },
+    "ts": {
+      "format": "date-time",
+      "title": "Ts",
+      "type": "string"
+    }
+  },
+  "required": [
+    "trial_id",
+    "cycle_id",
+    "params",
+    "objective",
+    "constraints_ok",
+    "recommendation_id",
+    "approved_by",
+    "ts"
+  ],
+  "title": "OptimizerTrialRead",
+  "type": "object"
+}

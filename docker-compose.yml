@@ -1,0 +1,64 @@
+# MycoLoop — production-shaped local stack.
+#   docker compose up -d --build
+#   docker compose --profile sim up -d      # adds a simulated chamber
+services:
+  db:
+    image: timescale/timescaledb:latest-pg16
+    environment:
+      POSTGRES_USER: mycoloop
+      POSTGRES_PASSWORD: mycoloop
+      POSTGRES_DB: mycoloop
+    ports: ["5432:5432"]
+    volumes: ["pgdata:/var/lib/postgresql/data"]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U mycoloop -d mycoloop"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  broker:
+    image: eclipse-mosquitto:2
+    ports: ["1883:1883"]
+    volumes:
+      - ./deploy/mosquitto.conf:/mosquitto/config/mosquitto.conf:ro
+      - mosquittodata:/mosquitto/data
+    # For a first run only: comment out password_file and set allow_anonymous true.
+
+  redis:
+    image: redis:7-alpine
+    ports: ["6379:6379"]
+
+  api:
+    build: .
+    depends_on:
+      db:
+        condition: service_healthy
+      broker:
+        condition: service_started
+    environment:
+      MYCOLOOP_DATABASE_URL: postgresql+psycopg://mycoloop:mycoloop@db:5432/mycoloop
+      MYCOLOOP_BUS: mqtt
+      MYCOLOOP_MQTT_HOST: broker
+      MYCOLOOP_MQTT_PORT: "1883"
+      MYCOLOOP_CREATE_SCHEMA_ON_BOOT: "0"
+      MYCOLOOP_OPERATOR_API_KEY: ${MYCOLOOP_OPERATOR_API_KEY:-dev-operator-key}
+      MYCOLOOP_ADMIN_API_KEY: ${MYCOLOOP_ADMIN_API_KEY:-dev-admin-key}
+      MYCOLOOP_DEVICE_TOKEN_SECRET: ${MYCOLOOP_DEVICE_TOKEN_SECRET:-change-me}
+      MYCOLOOP_SIM_ENABLED: "1"
+    ports: ["8000:8000"]
+
+  sim:
+    build: .
+    profiles: ["sim"]
+    depends_on: [api, broker]
+    environment:
+      MYCOLOOP_BUS: mqtt
+      MYCOLOOP_MQTT_HOST: broker
+    command: >
+      python -m mycoloop.sim --device chamber-01 --api http://api:8000
+      --mqtt-host broker --speed 4
+    restart: unless-stopped
+
+volumes:
+  pgdata:
+  mosquittodata:

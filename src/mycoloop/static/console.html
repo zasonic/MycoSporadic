@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>MycoLoop — Backend Console</title>
+<style>
+:root{
+  --bg:#070d0b; --bg2:#0b1512; --panel:#0f1b17; --panel2:#12221d; --overlay:#162923;
+  --line:#1e352d; --line2:#2a4a3e; --text:#e8f3ee; --muted:#8fa89d; --dim:#5f7a70;
+  --spore:#7cf29c; --cyan:#57d7ff; --amber:#ffc857; --magenta:#ff6bd6; --danger:#ff5d5d;
+  --grad:linear-gradient(135deg,#7cf29c 0%,#35d0ba 45%,#57d7ff 100%);
+  --shadow:0 18px 50px rgba(0,0,0,.45); --r:16px;
+}
+*{box-sizing:border-box}
+body{margin:0;background:
+  radial-gradient(1000px 600px at 15% -10%,rgba(124,242,156,.10),transparent 60%),
+  radial-gradient(900px 600px at 95% 10%,rgba(87,215,255,.08),transparent 60%),var(--bg);
+  color:var(--text);font:14px/1.5 ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+h1,h2,h3{letter-spacing:-.02em;margin:0}
+code,.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace}
+::-webkit-scrollbar{width:9px;height:9px}
+::-webkit-scrollbar-track{background:var(--bg2)}
+::-webkit-scrollbar-thumb{background:var(--line2);border-radius:8px}
+.topbar{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:12px;padding:12px 18px;
+  background:rgba(7,13,11,.9);backdrop-filter:blur(12px);border-bottom:1px solid var(--line);flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:17px}
+.logo{width:32px;height:32px;border-radius:10px;background:var(--grad);display:grid;place-items:center;color:#06110c}
+main{padding:18px;max-width:1500px;margin:0 auto}
+.card{background:linear-gradient(180deg,var(--panel),var(--bg2));border:1px solid var(--line);
+  border-radius:var(--r);padding:16px;box-shadow:var(--shadow)}
+.card h3{font-size:15px;margin-bottom:10px}
+.grid{display:grid;gap:14px}
+.g2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.g4{grid-template-columns:repeat(4,minmax(0,1fr))}
+.main-grid{grid-template-columns:2fr 1fr}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 12px;border-radius:10px;border:1px solid var(--line2);
+  background:var(--panel2);color:var(--text);font-weight:600;font-size:12.5px;cursor:pointer;transition:.15s}
+.btn:hover{border-color:var(--spore);transform:translateY(-1px)}
+.btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
+.btn-primary{background:var(--grad);color:#06110c;border:none}
+.btn-danger{border-color:rgba(255,93,93,.45);color:var(--danger)}
+.btn-sm{padding:5px 9px;font-size:11.5px}
+.btn.on{border-color:var(--danger);color:var(--danger);background:rgba(255,93,93,.08)}
+input,select,textarea{width:100%;background:var(--bg2);border:1px solid var(--line2);color:var(--text);
+  border-radius:9px;padding:8px 10px;font-size:13px;outline:none;font-family:inherit}
+input:focus,select:focus{border-color:var(--spore)}
+input[type=range]{padding:0;accent-color:var(--spore);height:4px}
+label{display:block;font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);margin:0 0 5px;font-weight:600}
+.pill{display:inline-flex;align-items:center;gap:5px;padding:3px 8px;border-radius:999px;font-size:11px;
+  font-weight:600;border:1px solid var(--line2);background:var(--panel2);color:var(--muted)}
+.pill.green{color:var(--spore);border-color:rgba(124,242,156,.35);background:rgba(124,242,156,.08)}
+.pill.cyan{color:var(--cyan);border-color:rgba(87,215,255,.35);background:rgba(87,215,255,.08)}
+.pill.amber{color:var(--amber);border-color:rgba(255,200,87,.35);background:rgba(255,200,87,.08)}
+.pill.red{color:var(--danger);border-color:rgba(255,93,93,.35);background:rgba(255,93,93,.08)}
+.stat .v{font-size:26px;font-weight:700;letter-spacing:-.02em}
+.stat .k{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.gauge{height:6px;border-radius:99px;background:var(--line);overflow:hidden;margin-top:6px}
+.gauge i{display:block;height:100%;background:var(--grad);transition:width .4s}
+.led{width:9px;height:9px;border-radius:50%;background:var(--dim);display:inline-block}
+.led.on{background:var(--spore);box-shadow:0 0 10px var(--spore)}
+.led.err{background:var(--danger);box-shadow:0 0 10px var(--danger)}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+th{text-align:left;padding:7px 8px;font-size:10px;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--muted);border-bottom:1px solid var(--line2);position:sticky;top:0;background:var(--overlay)}
+td{padding:7px 8px;border-bottom:1px solid var(--line)}
+.scroll{overflow:auto;max-height:300px;border:1px solid var(--line);border-radius:12px}
+.log{font-family:ui-monospace,monospace;font-size:11px;max-height:260px;overflow:auto;background:#08110e;
+  border:1px solid var(--line);border-radius:12px;padding:9px}
+.log div{padding:3px 0;border-bottom:1px dashed rgba(30,53,45,.6);display:flex;gap:8px}
+.log .t{color:var(--dim);flex:none}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.tab{padding:7px 13px;border-radius:10px;border:1px solid var(--line);background:var(--panel);
+  color:var(--muted);cursor:pointer;font-weight:600;font-size:12.5px}
+.tab.active{color:var(--text);border-color:var(--line2);background:linear-gradient(90deg,rgba(124,242,156,.14),rgba(87,215,255,.06));box-shadow:inset 3px 0 0 var(--spore)}
+.row{display:flex;align-items:center;gap:8px}
+.between{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.wrap{flex-wrap:wrap}.mt{margin-top:12px}.mb{margin-bottom:12px}
+.muted{color:var(--muted)}.dim{color:var(--dim)}.xs{font-size:11.5px}.b{font-weight:700}
+.sep{height:1px;background:var(--line);margin:12px 0}
+.hide{display:none}
+.actuator{display:flex;align-items:center;justify-content:space-between;padding:8px 10px;border:1px solid var(--line);
+  border-radius:10px;background:var(--bg2);margin-bottom:6px}
+#toasts{position:fixed;right:16px;bottom:16px;z-index:50;display:flex;flex-direction:column;gap:8px}
+.toast{background:var(--overlay);border:1px solid var(--line2);border-left:4px solid var(--spore);
+  padding:10px 13px;border-radius:11px;box-shadow:var(--shadow);min-width:240px;font-size:12.5px}
+.toast.err{border-left-color:var(--danger)}.toast.warn{border-left-color:var(--amber)}
+.chain{font-size:11.5px;color:var(--muted);line-height:1.9}
+.chain b{color:var(--spore)}
+@media(max-width:1100px){.main-grid,.g4{grid-template-columns:1fr}.g4{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:760px){.g2,.g3,.g4{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="brand"><span class="logo"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22v-8"/><path d="M4 14c0-5 3.6-9 8-9s8 4 8 9H4z"/></svg></span>MycoLoop</div>
+  <span class="pill cyan">REAL BACKEND</span>
+  <span class="pill" id="health">connecting…</span>
+  <span class="pill" id="dryrun">dry-run: ?</span>
+  <div style="flex:1"></div>
+  <label style="margin:0">X-API-Key</label>
+  <input id="apikey" style="width:190px" value="dev-operator-key" />
+  <select id="device" style="width:150px"></select>
+  <button class="btn btn-sm" id="refresh">Refresh</button>
+</header>
+
+<main>
+  <div class="tabs" id="tabs"></div>
+
+  <!-- ================= CHAMBER ================= -->
+  <section id="tab-chamber">
+    <div class="grid g4 mb" id="stats"></div>
+    <div class="grid main-grid">
+      <div>
+        <div class="card mb">
+          <div class="between"><h3>Validated telemetry</h3><span class="pill cyan" id="quality-pill">quality —</span></div>
+          <div id="chart" style="height:210px"></div>
+          <div class="xs dim mt">Only rows from <code>/telemetry/clean</code> are drawn. Quarantined fields are gaps, never zeros.</div>
+        </div>
+        <div class="grid g2 mb">
+          <div class="card"><h3>Actuators</h3><div id="actuators"></div>
+            <div class="xs muted mt">Watchdog <b id="wd">—</b> · device <b id="devstate">—</b></div></div>
+          <div class="card"><h3>Command bus</h3><div class="scroll" style="max-height:210px"><table><thead><tr><th>Command</th><th>Kind</th><th>State</th><th>Try</th></tr></thead><tbody id="commands"></tbody></table></div></div>
+        </div>
+        <div class="card"><h3>Safety events</h3><div class="log" id="safety-log"></div></div>
+      </div>
+      <div>
+        <div class="card mb">
+          <h3>Dispatch setpoints</h3>
+          <div id="sliders"></div>
+          <div class="row mt"><button class="btn btn-primary" id="send-sp">Dispatch command</button>
+            <button class="btn" id="evaluate">Control tick</button></div>
+          <div class="xs dim mt">Idempotency key is generated per dispatch. Re-sending the same key never actuates twice.</div>
+          <div class="sep"></div>
+          <label>Manual override</label>
+          <div class="row wrap" id="overrides"></div>
+        </div>
+        <div class="card mb">
+          <h3>Fault injection</h3>
+          <div class="row wrap" id="faults"></div>
+          <div class="xs dim mt">Simulator only. The chamber keeps its own watchdog and interlocks.</div>
+        </div>
+        <div class="card">
+          <h3>Safety envelope</h3>
+          <div class="chain" id="envelope"></div>
+          <div class="sep"></div>
+          <div class="chain">Optimizer <b>recommends</b> → safety <b>validates</b> → human <b>approves</b> → control <b>executes</b> → hardware watchdog <b>protects</b>.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= BIOLOGY ================= -->
+  <section id="tab-biology" class="hide">
+    <div class="grid main-grid">
+      <div class="card">
+        <div class="between"><h3 id="cycle-title">Cycle</h3><span class="pill green" id="cycle-stage">—</span></div>
+        <div class="grid g4 mt mb" id="cycle-facts"></div>
+        <div class="row wrap mb">
+          <button class="btn btn-primary" id="advance">Advance stage</button>
+          <button class="btn" id="harvest">Log harvest</button>
+          <button class="btn btn-danger" id="contam">Contamination</button>
+        </div>
+        <div class="sep"></div>
+        <h3>Append-only timeline</h3>
+        <div class="log" id="timeline" style="max-height:320px"></div>
+        <div class="sep"></div>
+        <h3>Environment by stage</h3>
+        <div class="scroll" style="max-height:220px"><table><thead><tr><th>Stage</th><th>n</th><th>Temp</th><th>RH</th><th>CO₂</th></tr></thead><tbody id="env"></tbody></table></div>
+      </div>
+      <div>
+        <div class="card mb"><h3>Cycles</h3><div class="scroll" style="max-height:300px"><table><thead><tr><th>ID</th><th>Stage</th><th>Yield</th></tr></thead><tbody id="cycles"></tbody></table></div></div>
+        <div class="card">
+          <h3>New cycle</h3>
+          <label>Strain id</label><input id="nc-strain" value="blue-oyster" class="mb" />
+          <label>Substrate batch id</label><input id="nc-batch" value="SB-101" class="mb" />
+          <label>Recipe id</label><input id="nc-recipe" value="R-07" class="mb" />
+          <button class="btn btn-primary" id="create-cycle">Create strain + batch + recipe + cycle</button>
+          <div class="xs dim mt">Creates every referenced entity if missing, then opens the cycle at INOCULATED.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= OPTIMIZER ================= -->
+  <section id="tab-optimizer" class="hide">
+    <div class="grid main-grid">
+      <div>
+        <div class="card mb">
+          <div class="between"><h3>Recommendation</h3><span class="pill" id="rec-state">idle</span></div>
+          <div id="rec-body" class="mt muted xs">Run the optimizer to produce a grounded recommendation from completed cycles.</div>
+          <div class="row wrap mt">
+            <button class="btn btn-primary" id="opt-run">Run optimizer</button>
+            <button class="btn" id="opt-approve" disabled>Approve recipe</button>
+            <button class="btn btn-danger" id="opt-reject" disabled>Reject</button>
+            <button class="btn" id="opt-rollback">Rollback</button>
+          </div>
+        </div>
+        <div class="card"><h3>Trials</h3><div class="scroll"><table><thead><tr><th>Trial</th><th>Temp</th><th>RH</th><th>FAE</th><th>Objective</th><th>Constraints</th><th>Approved</th></tr></thead><tbody id="trials"></tbody></table></div></div>
+      </div>
+      <div>
+        <div class="card mb"><h3>Search space</h3><div id="search"></div>
+          <div class="xs dim mt">Widen it past the envelope to watch the safety gate block approval.</div></div>
+        <div class="card"><h3>Optimizer audit</h3><div class="log" id="opt-log"></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= AUDIT ================= -->
+  <section id="tab-audit" class="hide">
+    <div class="grid g2">
+      <div class="card"><h3>Audit log (append-only)</h3><div class="log" id="audit" style="max-height:520px"></div></div>
+      <div>
+        <div class="card mb"><h3>Telemetry quarantine</h3><div class="scroll" style="max-height:240px"><table><thead><tr><th>Seq</th><th>Reasons</th></tr></thead><tbody id="quarantine"></tbody></table></div></div>
+        <div class="card"><h3>Sensor health</h3><div class="scroll" style="max-height:240px"><table><thead><tr><th>Sensor</th><th>Health</th><th>Invalid</th><th>Drift</th></tr></thead><tbody id="drift"></tbody></table></div></div>
+      </div>
+    </div>
+  </section>
+</main>
+<div id="toasts"></div>
+
+<script>
+"use strict";
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c]));
+const state = { tab:"chamber", device:"chamber-01", cycle:null, rec:null, envelope:null, rows:[], faults:new Set() };
+const SP = [
+  ["temp_c","Temperature",10,30,0.1,"°C",19],
+  ["humidity_pct","Humidity",50,99,1,"%",92],
+  ["co2_ceiling_ppm","CO₂ ceiling",400,3000,10," ppm",900],
+  ["fan_pct","Fresh air exchange",0,100,1,"%",45],
+  ["light_pct","Light",0,100,1,"%",60],
+];
+const SEARCH = [["temp_min",10,34,16],["temp_max",18,36,22],["rh_min",80,96,86],["rh_max",90,99,96],["co2_max",600,3000,1400],["fae_min",10,80,35],["fae_max",40,100,90]];
+const FAULTS = ["sensor_disconnect","co2_invalid","rh_saturation","heater_stuck","humidifier_stuck","fan_failure","power_loss","backend_crash"];
+
+function key(){ return $("#apikey").value.trim(); }
+function toast(msg, kind){ const el=document.createElement("div"); el.className="toast "+(kind||""); el.textContent=msg;
+  $("#toasts").appendChild(el); setTimeout(()=>el.remove(), 5000); }
+
+async function api(path, opts={}){
+  const res = await fetch(path, { ...opts, headers: { "Content-Type":"application/json", "X-API-Key":key(), ...(opts.headers||{}) } });
+  const text = await res.text();
+  let body = null; try { body = text ? JSON.parse(text) : null; } catch { body = text; }
+  if(!res.ok){ const d = body && body.detail; const msg = typeof d === "string" ? d : (d && d.message) || res.statusText;
+    throw Object.assign(new Error(msg), { status:res.status, body }); }
+  return body;
+}
+const fmtT = t => t ? new Date(t).toLocaleTimeString([], {hour:"2-digit",minute:"2-digit",second:"2-digit"}) : "—";
+
+/* ---------- inline SVG chart (no chart library, no network) ---------- */
+function chart(rows){
+  const W=760,H=210,P={l:38,r:44,t:12,b:22};
+  if(!rows.length) return '<div class="muted xs" style="padding:70px 0;text-align:center">No validated telemetry yet — start the simulator or dispatch a command.</div>';
+  const series=[["temperature_c","#7cf29c"],["humidity_pct","#57d7ff"],["co2_ppm","#ffc857"]];
+  const bounds={};
+  series.forEach(([k])=>{ const v=rows.map(r=>r[k]).filter(x=>x!=null);
+    bounds[k]= v.length? [Math.min(...v),Math.max(...v)] : [0,1]; if(bounds[k][0]===bounds[k][1]){bounds[k][0]-=1;bounds[k][1]+=1;} });
+  const x=i=> P.l + (i/Math.max(rows.length-1,1))*(W-P.l-P.r);
+  const y=(k,v)=> P.t + (1-(v-bounds[k][0])/(bounds[k][1]-bounds[k][0]))*(H-P.t-P.b);
+  let svg=`<svg viewBox="0 0 ${W} ${H}" width="100%" height="210" preserveAspectRatio="none">`;
+  for(let g=0;g<=4;g++){ const yy=P.t+g*(H-P.t-P.b)/4; svg+=`<line x1="${P.l}" y1="${yy}" x2="${W-P.r}" y2="${yy}" stroke="#1e352d" stroke-width="1"/>`; }
+  series.forEach(([k,color])=>{
+    let d="",open=false;
+    rows.forEach((r,i)=>{ const v=r[k];
+      if(v==null){ open=false; return; }              // gaps stay gaps
+      d += (open? "L":"M") + x(i).toFixed(1) + " " + y(k,v).toFixed(1) + " "; open=true; });
+    svg+=`<path d="${d}" fill="none" stroke="${color}" stroke-width="1.8" stroke-linejoin="round"/>`;
+    const last=[...rows].reverse().find(r=>r[k]!=null);
+    if(last) svg+=`<text x="${W-P.r+4}" y="${y(k,last[k])+4}" fill="${color}" font-size="10" font-family="monospace">${Number(last[k]).toFixed(k==="co2_ppm"?0:1)}</text>`;
+  });
+  svg+=`<text x="4" y="${P.t+8}" fill="#5f7a70" font-size="9">temp/RH/CO₂ (own scales)</text>`;
+  svg+=`<text x="${P.l}" y="${H-6}" fill="#5f7a70" font-size="9">${fmtT(rows[0].ts)}</text>`;
+  svg+=`<text x="${W-P.r-52}" y="${H-6}" fill="#5f7a70" font-size="9">${fmtT(rows[rows.length-1].ts)}</text></svg>`;
+  return svg;
+}
+
+/* ---------- rendering ---------- */
+function renderTabs(){
+  const tabs=[["chamber","Chamber & Safety"],["biology","Biology Ledger"],["optimizer","Optimizer"],["audit","Audit & Quality"]];
+  $("#tabs").innerHTML = tabs.map(([id,label])=>`<button class="tab ${state.tab===id?"active":""}" data-tab="${id}">${label}</button>`).join("");
+  tabs.forEach(([id])=> $("#tab-"+id).classList.toggle("hide", id!==state.tab));
+}
+function renderStats(rows, sim){
+  const last = rows[0] || {};
+  const env = state.envelope || {};
+  const cells=[["Temperature",last.temperature_c,"°C",env.max_temp_c,"#7cf29c"],
+               ["Humidity",last.humidity_pct,"%",env.max_humidity_pct,"#57d7ff"],
+               ["CO₂",last.co2_ppm," ppm",env.max_co2_ppm,"#ffc857"],
+               ["Watchdog",sim?sim.watchdog_remaining_s:null,"s",60,"#ff6bd6"]];
+  $("#stats").innerHTML = cells.map(([k,v,u,max,color])=>{
+    const pct = v==null?0:Math.max(0,Math.min(100, v/max*100));
+    const bad = v!=null && max!=null && v>max;
+    return `<div class="card stat"><span class="k">${k}</span>
+      <span class="v" style="color:${bad?"var(--danger)":color}">${v==null?"—":Number(v).toFixed(k==="CO₂"||k==="Watchdog"?0:1)}${u}</span>
+      <div class="gauge"><i style="width:${pct}%;background:${bad?"var(--danger)":"var(--grad)"}"></i></div>
+      <span class="xs dim">safe ≤ ${max??"—"}${u}</span></div>`;
+  }).join("");
+}
+function renderSliders(){
+  $("#sliders").innerHTML = SP.map(([k,l,min,max,step,u,def])=>
+    `<div class="mb"><label>${l} <span class="mono" id="out-${k}" style="color:var(--spore)">${def}${u}</span></label>
+     <input type="range" data-sp="${k}" min="${min}" max="${max}" step="${step}" value="${def}" /></div>`).join("");
+  $("#search").innerHTML = SEARCH.map(([k,min,max,def])=>
+    `<div class="mb"><label>${k.replace(/_/g," ")} <span class="mono" id="out-${k}" style="color:var(--spore)">${def}</span></label>
+     <input type="range" data-search="${k}" min="${min}" max="${max}" step="1" value="${def}" /></div>`).join("");
+  $("#overrides").innerHTML = ["heater","humidifier","fan","light"].map(a=>
+    `<button class="btn btn-sm" data-override="${a}">${a} ON</button>`).join("");
+  $("#faults").innerHTML = FAULTS.map(f=>`<button class="btn btn-sm" data-fault="${f}">${f.replace(/_/g," ")}</button>`).join("");
+}
+function spValues(){ const o={}; SP.forEach(([k,,,,,,def])=>{ const el=$(`[data-sp="${k}"]`); o[k]= el? Number(el.value): def; }); return o; }
+function searchValues(){ const o={}; SEARCH.forEach(([k,,,def])=>{ const el=$(`[data-search="${k}"]`); o[k]= el? Number(el.value): def; }); return o; }
+
+async function refresh(){
+  try{
+    const h = await api("/healthz");
+    $("#health").className = "pill green"; $("#health").textContent = `api ok · ${h.devices_online}/${h.devices_total} online · ${h.bus}`;
+    $("#dryrun").className = "pill "+(h.dry_run?"amber":""); $("#dryrun").textContent = "dry-run: "+(h.dry_run?"ON":"off");
+  }catch(e){ $("#health").className="pill red"; $("#health").textContent="api unreachable"; return; }
+
+  try{
+    const devs = await api("/devices");
+    const sel=$("#device");
+    if(sel.options.length !== devs.length){
+      sel.innerHTML = devs.map(d=>`<option value="${esc(d.device_id)}">${esc(d.device_id)}</option>`).join("");
+      if(devs.length && !devs.some(d=>d.device_id===state.device)) state.device = devs[0].device_id;
+      sel.value = state.device;
+    }
+  }catch(e){}
+
+  try{ state.envelope = (await api(`/devices/${state.device}/control/state`)).envelope; }catch(e){}
+  if(state.envelope){
+    const e=state.envelope;
+    $("#envelope").innerHTML = `temp <b>${e.min_temp_c}–${e.max_temp_c}°C</b> · RH <b>${e.min_humidity_pct}–${e.max_humidity_pct}%</b><br>
+      CO₂ ≤ <b>${e.max_co2_ppm} ppm</b> · min FAE <b>${e.min_fae_pct}%</b><br>
+      heater ≤ <b>${e.max_heater_runtime_min} min</b> · humidifier ≤ <b>${e.max_humidifier_runtime_min} min</b><br>
+      watchdog <b>${e.watchdog_timeout_s}s</b> · invalid sensor → <b>${e.sensor_invalid_behavior}</b>`;
+  }
+
+  let rows=[];
+  try{ rows = await api(`/telemetry/clean?device_id=${state.device}&limit=90`); }catch(e){}
+  state.rows = rows;
+  $("#chart").innerHTML = chart([...rows].reverse());
+  const flagged = rows.filter(r=>r.quality_flags && r.quality_flags.length).length;
+  $("#quality-pill").textContent = `${rows.length} validated · ${flagged} flagged`;
+  $("#quality-pill").className = "pill "+(flagged? "amber":"cyan");
+
+  let sim=null;
+  try{ const s = await api("/sim/devices"); sim = (s.devices||[]).find(d=>d.device_id===state.device) || null;
+    state.faults = new Set(sim? sim.faults : []);
+    document.querySelectorAll("[data-fault]").forEach(b=> b.classList.toggle("on", state.faults.has(b.dataset.fault)));
+  }catch(e){}
+  renderStats(rows, sim);
+  if(sim){ $("#wd").textContent = sim.watchdog_remaining_s+"s";
+    $("#devstate").innerHTML = sim.fail_safe? '<span class="pill red">FAIL-SAFE</span>' : '<span class="pill green">armed</span>'; }
+
+  try{
+    const cs = await api(`/devices/${state.device}/control/state`);
+    $("#actuators").innerHTML = Object.entries(cs.actuators||{}).map(([k,v])=>
+      `<div class="actuator"><span class="row"><span class="led ${v.state?"on":""}"></span>${k}</span>
+       <span class="mono xs">${v.state?"ON":"OFF"} · ${Math.round(v.runtime_s)}s</span></div>`).join("") || '<div class="xs dim">no actuators</div>';
+  }catch(e){}
+
+  try{
+    const cmds = await api(`/devices/${state.device}/commands?limit=12`);
+    $("#commands").innerHTML = cmds.map(c=>{
+      const cls = c.state==="applied"?"green":c.state==="failed"||c.state==="rejected_safety"?"red":c.state==="expired"?"amber":"cyan";
+      return `<tr><td class="mono xs">${esc(c.command_id.slice(0,12))}</td><td class="xs">${esc(c.kind)}</td>
+        <td><span class="pill ${cls}">${esc(c.state)}</span></td><td class="xs">${c.attempts}</td></tr>`;
+    }).join("") || '<tr><td colspan="4" class="xs dim">no commands yet</td></tr>';
+  }catch(e){}
+
+  try{
+    const audit = await api("/audit?limit=120");
+    const safety = audit.filter(a=>a.actor==="safety"||a.action.includes("fail_safe")||a.action.includes("veto")||a.action.includes("offline"));
+    $("#safety-log").innerHTML = safety.slice(0,25).map(a=>
+      `<div><span class="t">${fmtT(a.ts)}</span><span style="color:var(--amber)">${esc(a.action)}</span><span class="dim">${esc(JSON.stringify(a.detail).slice(0,110))}</span></div>`).join("") || '<div class="dim">no safety interventions recorded</div>';
+    $("#audit").innerHTML = audit.map(a=>
+      `<div><span class="t">${fmtT(a.ts)}</span><span style="color:var(--cyan)">${esc(a.actor)}</span><span>${esc(a.action)}</span><span class="dim">${esc(a.subject||"")}</span></div>`).join("") || '<div class="dim">empty</div>';
+    $("#opt-log").innerHTML = audit.filter(a=>a.action.startsWith("optimizer")||a.action.startsWith("recipe")).slice(0,20).map(a=>
+      `<div><span class="t">${fmtT(a.ts)}</span><span style="color:var(--spore)">${esc(a.action)}</span><span class="dim">${esc(a.subject||"")}</span></div>`).join("") || '<div class="dim">no optimizer events</div>';
+  }catch(e){}
+
+  if(state.tab==="biology") await refreshBiology();
+  if(state.tab==="optimizer") await refreshOptimizer();
+  if(state.tab==="audit") await refreshQuality();
+}
+
+async function refreshBiology(){
+  let cycles=[]; try{ cycles = await api("/grow-cycles"); }catch(e){ return; }
+  $("#cycles").innerHTML = cycles.map(c=>
+    `<tr data-cycle="${esc(c.cycle_id)}" style="cursor:pointer;${c.cycle_id===state.cycle?"background:rgba(87,215,255,.07)":""}">
+      <td class="mono xs">${esc(c.cycle_id)}</td><td><span class="pill ${c.stage==="CONTAMINATED"?"red":""}">${esc(c.stage.replace(/_/g," "))}</span></td>
+      <td class="xs">${c.yield_g} g</td></tr>`).join("") || '<tr><td colspan="3" class="xs dim">no cycles</td></tr>';
+  if(!state.cycle && cycles.length) state.cycle = cycles[0].cycle_id;
+  if(!state.cycle) return;
+  try{
+    const tl = await api(`/grow-cycles/${state.cycle}/timeline`);
+    const c = tl.cycle;
+    $("#cycle-title").textContent = c.cycle_id; $("#cycle-stage").textContent = c.stage;
+    $("#cycle-facts").innerHTML = [["Strain",c.strain_id],["Substrate",c.substrate_batch_id],["Flush",c.flush],["Yield",c.yield_g+" g"]]
+      .map(([k,v])=>`<div class="stat"><span class="k">${k}</span><span class="b">${esc(v)}</span></div>`).join("");
+    $("#timeline").innerHTML = [...tl.events].reverse().map(e=>
+      `<div><span class="t">${fmtT(e.ts)}</span><span style="color:var(--spore)">${esc(e.kind)}</span><span>${esc(e.detail)}</span><span class="dim">${esc(e.actor)}</span></div>`).join("") || '<div class="dim">no events</div>';
+    $("#env").innerHTML = tl.environment_by_stage.map(s=>
+      `<tr><td class="xs">${esc(s.stage.replace(/_/g," "))}</td><td class="xs">${s.samples}</td>
+       <td class="xs">${s.avg_temp_c??"—"}</td><td class="xs">${s.avg_humidity_pct??"—"}</td><td class="xs">${s.avg_co2_ppm??"—"}</td></tr>`).join("") || '<tr><td colspan="5" class="xs dim">no telemetry attributed yet</td></tr>';
+    const tr = await api(`/grow-cycles/${state.cycle}/transitions`);
+    $("#advance").disabled = !tr.next_stage;
+    $("#advance").textContent = tr.next_stage? "Advance → "+tr.next_stage.replace(/_/g," ") : "Terminal stage";
+  }catch(e){}
+}
+
+async function refreshOptimizer(){
+  try{
+    const trials = await api("/optimizer/trials");
+    $("#trials").innerHTML = trials.map(t=>
+      `<tr><td class="mono xs">${esc(t.trial_id.slice(0,10))}</td><td class="xs">${t.params.temp_c}</td><td class="xs">${t.params.humidity_pct}</td>
+       <td class="xs">${t.params.fan_pct}</td><td class="xs b">${t.objective}</td>
+       <td><span class="pill ${t.constraints_ok?"green":"red"}">${t.constraints_ok?"ok":"violated"}</span></td>
+       <td class="xs">${t.approved_by?esc(t.approved_by):"—"}</td></tr>`).join("") || '<tr><td colspan="7" class="xs dim">no trials</td></tr>';
+  }catch(e){}
+  if(state.rec) renderRec(state.rec);
+}
+
+function renderRec(rec){
+  const bad = (rec.violations||[]).length>0;
+  $("#rec-state").className = "pill "+(rec.state==="approved"?"green":rec.state==="rejected"?"red":bad?"red":"amber");
+  $("#rec-state").textContent = rec.state + (bad? " · vetoed":"");
+  $("#rec-body").innerHTML = `
+    <div class="grid g3 mb">
+      <div class="stat"><span class="k">Temp Δ</span><span class="v" style="color:var(--spore)">${rec.delta.temp_c>0?"+":""}${rec.delta.temp_c}°C</span></div>
+      <div class="stat"><span class="k">FAE Δ</span><span class="v" style="color:var(--cyan)">${rec.delta.fan_pct>0?"+":""}${rec.delta.fan_pct}%</span></div>
+      <div class="stat"><span class="k">RH Δ</span><span class="v" style="color:var(--amber)">${rec.delta.humidity_pct>0?"+":""}${rec.delta.humidity_pct}%</span></div>
+    </div>
+    <div class="row wrap mb"><span class="pill cyan">confidence: ${esc(rec.confidence)}</span>
+      <span class="pill">cycles: ${rec.based_on_cycles}</span>
+      <span class="pill">risk ≈ ${rec.expected_effect.contamination_risk_estimate}</span>
+      <span class="pill">${esc(rec.expected_effect.model)}</span></div>
+    <p class="xs muted">${esc(rec.reason)}</p>
+    ${bad? `<div class="xs" style="color:var(--danger)">Safety violations: ${rec.violations.map(v=>esc(v.message)).join("; ")}</div>`
+          : '<div class="xs" style="color:var(--spore)">Safety validation passed. Human approval required.</div>'}`;
+  $("#opt-approve").disabled = bad || rec.state!=="pending";
+  $("#opt-reject").disabled = rec.state!=="pending";
+}
+
+async function refreshQuality(){
+  try{
+    const q = await api(`/telemetry/quarantine?device_id=${state.device}&limit=40`);
+    $("#quarantine").innerHTML = q.map(r=>`<tr><td class="mono xs">${r.seq}</td><td class="xs">${esc((r.reasons||[]).join("; ").slice(0,120))}</td></tr>`).join("")
+      || '<tr><td colspan="2" class="xs dim">nothing quarantined</td></tr>';
+    const d = await api(`/telemetry/quality/drift?device_id=${state.device}`);
+    $("#drift").innerHTML = d.map(r=>`<tr><td class="xs">${esc(r.sensor)}</td>
+      <td><span class="pill ${r.health_score>0.8?"green":r.health_score>0.5?"amber":"red"}">${r.health_score.toFixed(2)}</span></td>
+      <td class="xs">${(r.invalid_ratio*100).toFixed(0)}%</td>
+      <td class="xs">${r.drift_suspected?'<span class="pill amber">suspected</span>':"—"}</td></tr>`).join("")
+      || '<tr><td colspan="4" class="xs dim">no sensors</td></tr>';
+  }catch(e){}
+}
+
+/* ---------- actions ---------- */
+document.addEventListener("click", async ev=>{
+  const t = ev.target.closest("[data-tab],[data-fault],[data-override],[data-cycle]");
+  if(!t) return;
+  if(t.dataset.tab){ state.tab=t.dataset.tab; renderTabs(); refresh(); return; }
+  if(t.dataset.cycle){ state.cycle=t.dataset.cycle; refreshBiology(); return; }
+  if(t.dataset.fault){
+    const on = !state.faults.has(t.dataset.fault);
+    try{ await api(`/sim/devices/${state.device}/faults?name=${t.dataset.fault}&enabled=${on}`, {method:"POST"});
+      toast(`${t.dataset.fault} ${on?"injected":"cleared"}`, on?"warn":""); refresh(); }catch(e){ toast(e.message,"err"); }
+    return;
+  }
+  if(t.dataset.override){
+    try{ const r = await api(`/devices/${state.device}/override?actuator=${t.dataset.override}&state=true`, {method:"POST"});
+      toast(r.applied? `${t.dataset.override} ON dispatched` : `vetoed: ${r.veto}`, r.applied?"":"warn"); refresh(); }catch(e){ toast(e.message,"err"); }
+  }
+});
+document.addEventListener("input", ev=>{
+  const k = ev.target.dataset.sp || ev.target.dataset.search;
+  if(!k) return;
+  const meta = SP.find(s=>s[0]===k);
+  const out = $("#out-"+k); if(out) out.textContent = ev.target.value + (meta? meta[5] : "");
+});
+$("#device").addEventListener("change", e=>{ state.device=e.target.value; state.cycle=null; refresh(); });
+$("#refresh").addEventListener("click", refresh);
+$("#apikey").addEventListener("change", ()=>{ try{ localStorage.setItem("mycoloop.key", key()); }catch(e){} refresh(); });
+
+$("#send-sp").addEventListener("click", async ()=>{
+  const payload = spValues();
+  try{
+    const r = await api(`/devices/${state.device}/commands`, {method:"POST", body: JSON.stringify({
+      kind:"setpoint", payload, idempotency_key:`console-${Date.now()}-${Math.random().toString(36).slice(2,8)}`, ttl_s:60 })});
+    if(!r.safety.ok) toast("Safety veto: "+r.safety.violations.map(v=>v.message).join("; "), "err");
+    else toast(`Command ${r.command.command_id.slice(0,12)} → ${r.command.state}`);
+    refresh();
+  }catch(e){ toast(e.message,"err"); }
+});
+$("#evaluate").addEventListener("click", async ()=>{
+  try{ const r = await api(`/devices/${state.device}/control/evaluate`, {method:"POST"});
+    toast(`Control tick: ${r.dispatched.length} dispatched${r.vetoes.length? ", vetoes: "+r.vetoes.join(","):""}`, r.vetoes.length?"warn":"");
+    refresh(); }catch(e){ toast(e.message,"err"); }
+});
+$("#create-cycle").addEventListener("click", async ()=>{
+  const strain=$("#nc-strain").value.trim(), batch=$("#nc-batch").value.trim(), recipe=$("#nc-recipe").value.trim();
+  try{
+    await api("/strains",{method:"POST",body:JSON.stringify({strain_id:strain,name:strain})}).catch(()=>{});
+    await api("/substrate-batches",{method:"POST",body:JSON.stringify({batch_id:batch,mass_kg:2.5})}).catch(()=>{});
+    let rv;
+    try{ const r = await api("/recipes",{method:"POST",body:JSON.stringify({recipe_id:recipe,name:recipe+" fruiting",stage:"PINNING_ACTIVE",setpoints:spValues()})}); rv=r.recipe_version_id; }
+    catch(e){ const list = await api(`/recipes?recipe_id=${recipe}`); rv = list[0].recipe_version_id; }
+    const c = await api("/grow-cycles",{method:"POST",body:JSON.stringify({strain_id:strain,substrate_batch_id:batch,device_id:state.device,recipe_version_id:rv})});
+    state.cycle = c.cycle_id; toast("Cycle "+c.cycle_id+" created"); state.tab="biology"; renderTabs(); refresh();
+  }catch(e){ toast(e.message,"err"); }
+});
+$("#advance").addEventListener("click", async ()=>{
+  try{ const tr = await api(`/grow-cycles/${state.cycle}/transitions`);
+    if(!tr.next_stage) return toast("terminal stage","warn");
+    await api(`/grow-cycles/${state.cycle}/transitions`,{method:"POST",body:JSON.stringify({to_stage:tr.next_stage,reason:"console advance"})});
+    toast("Stage → "+tr.next_stage); refreshBiology(); }catch(e){ toast(e.message,"err"); }
+});
+$("#harvest").addEventListener("click", async ()=>{
+  const g = prompt("Wet weight (g)?","420"); if(!g) return;
+  try{ await api(`/grow-cycles/${state.cycle}/harvests`,{method:"POST",body:JSON.stringify({grams:Number(g),flush:1})});
+    toast("Harvest recorded"); refreshBiology(); }catch(e){ toast(e.message,"err"); }
+});
+$("#contam").addEventListener("click", async ()=>{
+  try{ await api(`/grow-cycles/${state.cycle}/contamination`,{method:"POST",body:JSON.stringify({kind:"trichoderma",severity:"localized",notes:"logged from console"})});
+    toast("Contamination logged","err"); refreshBiology(); }catch(e){ toast(e.message,"err"); }
+});
+$("#opt-run").addEventListener("click", async ()=>{
+  const recipe = $("#nc-recipe").value.trim() || "R-07";
+  try{ state.rec = await api(`/optimizer/recommendations?recipe_id=${recipe}&device_id=${state.device}`,{method:"POST",body:JSON.stringify(searchValues())});
+    renderRec(state.rec); toast("Recommendation generated — approval required"); refreshOptimizer(); }catch(e){ toast(e.message,"err"); }
+});
+$("#opt-approve").addEventListener("click", async ()=>{
+  try{ const r = await api(`/optimizer/recommendations/${state.rec.recommendation_id}/approve`,{method:"POST",body:JSON.stringify({note:"approved from console"})});
+    toast("Approved → recipe "+r.recipe_version_id.slice(0,12)); state.rec=null; $("#rec-body").textContent="Approved and applied through the control engine.";
+    $("#opt-approve").disabled=true; $("#opt-reject").disabled=true; refresh(); }catch(e){ toast(e.message,"err"); }
+});
+$("#opt-reject").addEventListener("click", async ()=>{
+  try{ await api(`/optimizer/recommendations/${state.rec.recommendation_id}/reject`,{method:"POST",body:JSON.stringify({note:"rejected from console"})});
+    toast("Rejected","warn"); state.rec=null; $("#opt-approve").disabled=true; $("#opt-reject").disabled=true; refresh(); }catch(e){ toast(e.message,"err"); }
+});
+$("#opt-rollback").addEventListener("click", async ()=>{
+  const recipe = $("#nc-recipe").value.trim() || "R-07";
+  try{ const r = await api(`/optimizer/rollback?recipe_id=${recipe}&device_id=${state.device}`,{method:"POST",body:JSON.stringify({reason:"console rollback"})});
+    toast("Rolled back to "+r.rolled_back_to.slice(0,12)); refresh(); }catch(e){ toast(e.message,"err"); }
+});
+
+/* ---------- boot ---------- */
+try{ const saved = localStorage.getItem("mycoloop.key"); if(saved) $("#apikey").value = saved; }catch(e){}
+renderTabs(); renderSliders(); refresh();
+setInterval(()=>{ if(!document.hidden) refresh(); }, 3000);
+</script>
+</body>
+</html>

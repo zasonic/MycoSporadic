@@ -1,0 +1,134 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "device_id": {
+      "title": "Device Id",
+      "type": "string"
+    },
+    "boot_id": {
+      "default": "0",
+      "description": "device boot session; seq restarts at 0 on reboot",
+      "maxLength": 40,
+      "title": "Boot Id",
+      "type": "string"
+    },
+    "seq": {
+      "description": "monotonic per boot; dedupe key is (device_id, boot_id, seq)",
+      "minimum": 0,
+      "title": "Seq",
+      "type": "integer"
+    },
+    "ts": {
+      "format": "date-time",
+      "title": "Ts",
+      "type": "string"
+    },
+    "temperature_c": {
+      "anyOf": [
+        {
+          "maximum": 85,
+          "minimum": -40,
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Temperature C"
+    },
+    "humidity_pct": {
+      "anyOf": [
+        {
+          "maximum": 100,
+          "minimum": 0,
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Humidity Pct"
+    },
+    "co2_ppm": {
+      "anyOf": [
+        {
+          "maximum": 60000,
+          "minimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Co2 Ppm"
+    },
+    "substrate_moisture_pct": {
+      "anyOf": [
+        {
+          "maximum": 100,
+          "minimum": 0,
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Substrate Moisture Pct"
+    },
+    "fan_pct": {
+      "anyOf": [
+        {
+          "maximum": 100,
+          "minimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Fan Pct"
+    },
+    "light_pct": {
+      "anyOf": [
+        {
+          "maximum": 100,
+          "minimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Light Pct"
+    },
+    "actuators": {
+      "additionalProperties": {
+        "type": "boolean"
+      },
+      "default": {},
+      "title": "Actuators",
+      "type": "object"
+    },
+    "quality_flags": {
+      "description": "device-reported flags",
+      "items": {
+        "type": "string"
+      },
+      "title": "Quality Flags",
+      "type": "array"
+    }
+  },
+  "required": [
+    "device_id",
+    "seq",
+    "ts"
+  ],
+  "title": "Telemetry",
+  "type": "object"
+}

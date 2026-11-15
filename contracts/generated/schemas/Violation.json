@@ -1,0 +1,27 @@
+{
+  "properties": {
+    "field": {
+      "title": "Field",
+      "type": "string"
+    },
+    "value": {
+      "title": "Value"
+    },
+    "rule": {
+      "title": "Rule",
+      "type": "string"
+    },
+    "message": {
+      "title": "Message",
+      "type": "string"
+    }
+  },
+  "required": [
+    "field",
+    "value",
+    "rule",
+    "message"
+  ],
+  "title": "Violation",
+  "type": "object"
+}

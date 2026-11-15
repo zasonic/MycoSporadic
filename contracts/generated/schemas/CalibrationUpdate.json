@@ -1,0 +1,18 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "offset": {
+      "default": 0.0,
+      "title": "Offset",
+      "type": "number"
+    },
+    "scale": {
+      "default": 1.0,
+      "exclusiveMinimum": 0,
+      "title": "Scale",
+      "type": "number"
+    }
+  },
+  "title": "CalibrationUpdate",
+  "type": "object"
+}
