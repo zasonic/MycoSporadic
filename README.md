@@ -113,7 +113,7 @@ fan, light**.
 
 Each actuator needs a relay or MOSFET driver the edge can switch **and** report
 back — the backend trusts what the device *reports*, never its own last command
-(bug #3 in "Bugs this scaffold found in itself").
+(bug 3 in "Bugs this scaffold found in itself").
 
 ### Edge controller & safety hardware
 
@@ -134,8 +134,10 @@ back — the backend trusts what the device *reports*, never its own last comman
 
 Registering a device declares its inventory — `sensors: ["temperature",
 "humidity", "co2"]` and `actuators: ["heater", "humidifier", "fan", "light"]`
-by default. Uninstalled optional sensors must simply be omitted; reporting a
-dead one flags every reading as degraded (bug #8 above).
+by default. Uninstalled optional sensors must simply be omitted: only a *core*
+sensor going missing is a quality event (`sensor_missing`), so an absent
+optional sensor never poisons every reading (bug 8 in "Bugs this scaffold
+found in itself").
 
 ---
 
