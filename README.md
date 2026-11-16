@@ -38,6 +38,26 @@ Then open:
 Default keys (change them before anything touches hardware):
 `X-API-Key: dev-operator-key` (operator), `dev-admin-key` (admin, token rotation).
 
+### Optional MycoSporadic frontend preview
+
+The `frontend/` directory contains a separate React interface with simulated
+zones, environmental charts, a parts planner, commissioning checks, and
+per-zone ESPHome YAML export. It does not replace `/console` and is not yet
+connected to this backend's REST API or MQTT contract.
+
+```bash
+cd frontend
+npm ci                  # Node.js 22.12+ recommended
+npm run dev             # frontend preview at http://localhost:5000
+```
+
+Run `npm run check` for TypeScript validation and `npm run build` to generate
+the static frontend in `frontend/dist/public`. All displayed telemetry and
+output controls are simulated, and settings reset on refresh. The exported
+ESPHome template comes from the companion hardware-planning material; it is
+not a validated implementation of this backend's safety or MQTT contracts.
+See [`frontend/README.md`](frontend/README.md) for scope and integration notes.
+
 ---
 
 ## What is actually implemented
